@@ -1,6 +1,8 @@
 "use Client";
 
 import Link from "next/link";
+import Movie from "../../components/movie";
+import styles from "../../styles/home.module.css";
 
 export const metadata = {
   title: "Home",
@@ -8,8 +10,7 @@ export const metadata = {
 
 export const API_URL = "https://nomad-movies.nomadcoders.workers.dev/movies";
 
-async function getMovies() {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+export async function getMovies() {
   const response = await fetch(API_URL);
   const json = await response.json();
   return json;
@@ -18,14 +19,17 @@ async function getMovies() {
 export default async function HomePage() {
   const movies = await getMovies();
   return (
-    <ul>
+    <div className={styles.container}>
       {movies.map((movie) => {
         return (
-          <li key={movie.id}>
-            <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-          </li>
+          <Movie
+            key={movie.key}
+            id={movie.id}
+            poster_path={movie.poster_path}
+            title={movie.title}
+          />
         );
       })}
-    </ul>
+    </div>
   );
 }
